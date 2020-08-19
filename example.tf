@@ -11,7 +11,12 @@ provider "aws" {
   region  = "us-east-1"
 }
 
-resource "aws_instance" "example" {
-  ami           = "ami-02354e95b39ca8dec"
-  instance_type = "t2.micro"
+// Create a variable for our domain name because we'll be using it a lot.
+//variable "www_domain_name" {
+//  default = "www.root-domain-test.com"
+//}
+
+// We'll also need the root domain (also known as zone apex or naked domain).
+variable "root_domain_name" {
+  default = "test.com"
 }
