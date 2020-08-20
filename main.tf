@@ -14,14 +14,14 @@ provider "aws" {
 module "frontend_prod" {
   source   = "./publish_frontend/"
   
-  route53_hosting_zone = "standupify.com"
-  root_domain_name = "prod.standupify.com"
+  route53_hosting_zone = "example.com"
+  root_domain_name = "prod.example.com"
 }
 
 
 module "frontend_staging" {
   source   = "./publish_frontend/"
   
-  route53_hosting_zone = "standupify.com"
-  root_domain_name = "staging.standupify.com"
+  route53_hosting_zone = "example.com"
+  root_domain_name = "staging.example.com"
 }
