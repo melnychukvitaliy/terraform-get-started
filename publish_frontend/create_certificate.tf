@@ -12,7 +12,7 @@ resource "aws_acm_certificate" "certificate" {
 }
 
 data "aws_route53_zone" "example" {
-  name         = var.root_domain_name
+  name         = var.route53_hosting_zone
   private_zone = false
 }
 
