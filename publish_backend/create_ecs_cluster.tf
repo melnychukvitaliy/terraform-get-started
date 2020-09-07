@@ -175,6 +175,15 @@ resource "aws_ecs_task_definition" "app" {
 DEFINITION
 }
 
+resource "aws_ecr_repository" "main" {
+  name                 = "${var.env}-${var.app_name}"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
 resource "aws_ecs_service" "main" {
   name            = "${var.env}-${var.app_name}-app-service"
   cluster         = aws_ecs_cluster.main.id
@@ -198,3 +207,22 @@ resource "aws_ecs_service" "main" {
   ]
 }
  
+ resource "aws_iam_role" "ecs_task_execution_role" {
+  name = "ecsTaskExecutionRole"
+ 
+  assume_role_policy = <<EOF
+{
+ "Version": "2012-10-17",
+ "Statement": [
+   {
+     "Action": "sts:AssumeRole",
+     "Principal": {
+       "Service": "ecs-tasks.amazonaws.com"
+     },
+     "Effect": "Allow",
+     "Sid": ""
+   }
+ ]
+}
+EOF
+}
