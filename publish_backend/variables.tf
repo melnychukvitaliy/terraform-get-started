@@ -3,6 +3,14 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
+variable "root_domain_name" {
+  description = "Domain when Backend should be available to use along with certificates"
+}
+
+variable "route53_hosting_zone" {
+  description = "AWS Route53 hosring zone"
+}
+
 variable "az_count" {
   description = "Number of AZs to cover in a given AWS region"
   default     = "2"
