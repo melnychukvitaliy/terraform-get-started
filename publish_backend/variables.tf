@@ -8,6 +8,14 @@ variable "az_count" {
   default     = "2"
 }
 
+variable "env" {
+  description = "Backend ECS environment"
+}
+
+variable "app_name" {
+   description = "Application name"
+}
+
 variable "app_image" {
   description = "Docker image to run in the ECS cluster"
   default     = "adongy/hostname-docker:latest"
@@ -32,3 +40,5 @@ variable "fargate_memory" {
   description = "Fargate instance memory to provision (in MiB)"
   default     = "512"
 }
+
+

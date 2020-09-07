@@ -74,7 +74,7 @@ resource "aws_route_table_association" "private" {
 # ALB Security group
 # This is the group you need to edit if you want to restrict access to your application
 resource "aws_security_group" "lb" {
-  name        = "tf-ecs-alb"
+  name        = "${var.env}-${var.app_name}-ecs-alb"
   description = "controls access to the ALB"
   vpc_id      = aws_vpc.main.id
 
@@ -95,7 +95,7 @@ resource "aws_security_group" "lb" {
 
 # Traffic to the ECS Cluster should only come from the ALB
 resource "aws_security_group" "ecs_tasks" {
-  name        = "tf-ecs-tasks"
+  name        = "${var.env}-${var.app_name}-ecs-tasks"
   description = "allow inbound access from the ALB only"
   vpc_id      = aws_vpc.main.id
 
@@ -118,13 +118,13 @@ resource "aws_security_group" "ecs_tasks" {
 ### ALB
 
 resource "aws_alb" "main" {
-  name            = "tf-ecs-chat"
+  name            = "${var.env}-${var.app_name}-alb"
   subnets         = aws_subnet.public.*.id
   security_groups = [aws_security_group.lb.id]
 }
 
 resource "aws_alb_target_group" "app" {
-  name        = "tf-ecs-chat"
+  name        = "${var.env}-${var.app_name}-ecs-target"
   port        = 80
   protocol    = "HTTP"
   vpc_id      = aws_vpc.main.id
@@ -146,7 +146,7 @@ resource "aws_alb_listener" "front_end" {
 ### ECS
 
 resource "aws_ecs_cluster" "main" {
-  name = "tf-ecs-cluster"
+  name = "${var.env}-${var.app_name}-cluster"
 }
 
 resource "aws_ecs_task_definition" "app" {
@@ -176,7 +176,7 @@ DEFINITION
 }
 
 resource "aws_ecs_service" "main" {
-  name            = "tf-ecs-service"
+  name            = "${var.env}-${var.app_name}-app-service"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.app.arn
   desired_count   = var.app_count
