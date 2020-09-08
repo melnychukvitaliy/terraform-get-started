@@ -254,3 +254,28 @@ resource "aws_ecs_service" "main" {
 }
 EOF
 }
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role-attach_ecr_policy" {
+  role       = "${aws_iam_role.ecs_task_execution_role.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
+}
+
+data "aws_route53_zone" "main" {
+  name         = var.route53_hosting_zone
+  private_zone = false
+}
+
+resource "aws_route53_record" "alias_route53_record" {
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = var.root_domain_name
+  type    = "A"
+
+  alias {
+    name                   = aws_alb.main.dns_name
+    zone_id                = aws_alb.main.zone_id
+    evaluate_target_health = true
+  }
+  depends_on = [
+    aws_alb.main,
+  ]
+}
