@@ -233,6 +233,14 @@ resource "aws_ecs_service" "main" {
   depends_on = [
     aws_alb_listener.front_end,
   ]
+
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to tags, e.g. because a management agent
+      # updates these based on some ruleset managed elsewhere.
+      task_definition,
+    ]
+  }
 }
  
  resource "aws_iam_role" "ecs_task_execution_role" {
@@ -256,7 +264,7 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role-attach_ecr_policy" {
-  role       = "${aws_iam_role.ecs_task_execution_role.name}"
+  role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
 }
 
